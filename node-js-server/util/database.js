@@ -5,15 +5,16 @@ let _db;
 
 const mongoConnect = callback => {
 	MongoClient.connect(
-		"mongodb://127.0.0.1:27017/mongod?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.2.5"
+		" mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.2.5"
 	)
 		.then(client => {
-			console.log("connected");
-			_db = client.db("shop");
+			console.log("Connected!");
+			_db = client.db();
 			callback();
 		})
 		.catch(err => {
 			console.log(err);
+			throw err;
 		});
 };
 
