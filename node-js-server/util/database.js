@@ -1,10 +1,28 @@
-const mysql = require('mysql2');
+const mongodb = require("mongodb");
+const MongoClient = mongodb.MongoClient;
 
-const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    database: 'node-complete',
-    password: 'nodecomplete'
-});
+let _db;
 
-module.exports = pool.promise();
+const mongoConnect = callback => {
+	MongoClient.connect(
+		"mongodb://127.0.0.1:27017/mongod?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.2.5"
+	)
+		.then(client => {
+			console.log("connected");
+			_db = client.db("shop");
+			callback();
+		})
+		.catch(err => {
+			console.log(err);
+		});
+};
+
+const getDb = () => {
+	if (_db) {
+		return _db;
+	}
+	throw "No database found!";
+};
+
+exports.mongoConnect = mongoConnect;
+exports.getDb = getDb;
